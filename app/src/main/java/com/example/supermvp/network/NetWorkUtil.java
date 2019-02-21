@@ -9,7 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetWorkUtil {
-    private NetService builder;
+    private Retrofit builder;
 
     private NetWorkUtil() {
     }
@@ -22,22 +22,22 @@ public class NetWorkUtil {
         return SingleHelper.mInstance;
     }
 
-    public OkHttpClient okHttpClient = new OkHttpClient.Builder()
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .build();
 
-    public NetService createRetrofit() {
-        if (builder == null)
+    public Retrofit createRetrofit() {
+        if (builder == null) {
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
+                    .build();
             builder = new Retrofit.Builder()
                     .baseUrl(NetService.API)
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
-                    .create(NetService.class);
+                    .build();
+        }
         return builder;
     }
 

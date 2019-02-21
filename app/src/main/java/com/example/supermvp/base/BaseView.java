@@ -1,4 +1,4 @@
-package com.example.supermvp.listener;
+package com.example.supermvp.base;
 
 public interface BaseView<T> {
     void onLoad();

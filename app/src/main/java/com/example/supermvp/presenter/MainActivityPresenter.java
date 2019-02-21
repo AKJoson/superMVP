@@ -1,10 +1,9 @@
 package com.example.supermvp.presenter;
 
 import android.annotation.SuppressLint;
-import android.os.Handler;
 
 import com.example.supermvp.base.BasePresenter;
-import com.example.supermvp.listener.BaseView;
+import com.example.supermvp.base.BaseView;
 import com.example.supermvp.model.MainModel;
 import com.google.gson.JsonObject;
 
@@ -13,44 +12,42 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class MainActivityPresenter implements BasePresenter {
+public class MainActivityPresenter extends BasePresenter {
     private BaseView mView;
-    private final MainModel mainModel;
+    private MainModel mainModel;
 
-    public MainActivityPresenter(BaseView view) {
-        mView = view;
-        //create the Model , to control data.
+    public MainActivityPresenter() {
         mainModel = new MainModel();
     }
 
     @SuppressLint("CheckResult")
     public void getFirstData() {
-        mView.onLoad();
+        viewProxy.onLoad();
         mainModel.getFirstData().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JsonObject>() {
                     @Override
                     public void accept(JsonObject jsonObject) throws Exception {
-                        mView.onSuccess(jsonObject.toString());
+                        viewProxy.onSuccess(jsonObject);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.onError(new Exception(throwable.getMessage()));
+                        viewProxy.onError(new Exception(throwable.getMessage()));
                     }
                 });
     }
 
     public void getSecondData() {
-        mView.onLoad();
+        viewProxy.onLoad();
         mainModel.getSecondData();
     }
 
     @Override
     public void attachView(BaseView view) {
         mView = view;
+        generateProxyView(mView);
     }
-
 
     @Override
     public void detachView() {
