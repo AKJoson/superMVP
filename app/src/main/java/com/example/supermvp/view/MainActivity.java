@@ -57,12 +57,7 @@ public class MainActivity extends BaseActivity<MainActivityPresenter, JsonObject
 
     @Override
     public void initClick() {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPrensenter.getFirstData();
-            }
-        });
+        button.setOnClickListener(v->mPrensenter.getFirstData()); // study use lambda expression.
     }
 
     @Override
