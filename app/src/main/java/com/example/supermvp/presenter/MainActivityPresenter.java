@@ -1,13 +1,12 @@
 package com.example.supermvp.presenter;
 
-import android.annotation.SuppressLint;
-
 import com.example.supermvp.base.BasePresenter;
 import com.example.supermvp.base.BaseView;
 import com.example.supermvp.model.MainModel;
 import com.google.gson.JsonObject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -20,10 +19,10 @@ public class MainActivityPresenter extends BasePresenter {
         mainModel = new MainModel();
     }
 
-    @SuppressLint("CheckResult")
     public void getFirstData() {
         viewProxy.onLoad();
-        mainModel.getFirstData().subscribeOn(Schedulers.io())
+        Disposable disposable = mainModel.getFirstData()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JsonObject>() {
                     @Override
